@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción - Redes Neuronales Artificiales</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Space Grotesk for HUD/Titles, Inter for text body, JetBrains Mono for data/math -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #050b14;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: #e2e8f0;
+        }
+        .font-hud { font-family: 'Space Grotesk', sans-serif; }
+        .font-data { font-family: 'JetBrains Mono', monospace; }
+        
+        .astro-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: inset 0 0 30px rgba(6, 182, 212, 0.05);
+        }
+        
+        .nav-hud {
+            background: rgba(5, 11, 20, 0.85);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+            backdrop-filter: blur(12px);
+        }
+
+        .hud-scanline {
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+            animation: scan 8s linear infinite;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30 overflow-x-hidden relative">
+
+    <div class="hud-scanline"></div>
+
+    <!-- HUD Navbar -->
+    <nav class="nav-hud fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(6,182,212,1)]"></div>
+                    <span class="font-hud font-bold text-lg tracking-widest text-cyan-50 uppercase">Telescope_Array_NN</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6 font-data text-xs tracking-widest">
+                        <a href="./index.html" class="text-cyan-400 border-b border-cyan-400 pb-1">TRK_01: INTRODUCCIÓN</a>
+                        <a href="./arquitectura.html" class="text-slate-500 hover:text-cyan-300 transition-colors">TRK_02: ARQUITECTURA</a>
+                        <a href="./perceptron.html" class="text-slate-500 hover:text-cyan-300 transition-colors">TRK_03: PERCEPTRÓN</a>
+                        <a href="./multicapa.html" class="text-slate-500 hover:text-cyan-300 transition-colors">TRK_04: MULTICAPA</a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-cyan-600 hover:text-cyan-300 focus:outline-none">
+                        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden hidden bg-[#050b14] border-t border-cyan-900/50" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 font-data text-xs tracking-widest">
+                <a href="./index.html" class="text-cyan-400 block px-3 py-2">TRK_01: INTRODUCCIÓN</a>
+                <a href="./arquitectura.html" class="text-slate-500 hover:text-cyan-300 block px-3 py-2">TRK_02: ARQUITECTURA</a>
+                <a href="./perceptron.html" class="text-slate-500 hover:text-cyan-300 block px-3 py-2">TRK_03: PERCEPTRÓN</a>
+                <a href="./multicapa.html" class="text-slate-500 hover:text-cyan-300 block px-3 py-2">TRK_04: MULTICAPA</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Grid -->
+    <main class="pt-28 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <header class="mb-12 border-b border-cyan-900/50 pb-8 flex flex-col md:flex-row md:items-end justify-between">
+            <div>
+                <div class="font-data text-cyan-500 text-xs mb-2 tracking-widest uppercase flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 bg-cyan-500"></span> LOG_REGISTRY_INIT
+                </div>
+                <h1 class="font-hud text-4xl font-bold text-white tracking-widest uppercase drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]">Redes Neuronales Artificiales</h1>
+                <p class="mt-2 text-lg text-slate-400 font-light font-hud tracking-wide">Introducción Histórica y Contextual</p>
+            </div>
+            <div class="mt-6 md:mt-0 font-data text-xs text-slate-500 text-right">
+                SYS.TIME: <span id="sys-time">00:00:00</span><br>
+                UPLINK: ESTABLE
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left telemetry decorative sidebar -->
+            <div class="hidden lg:flex lg:col-span-3 flex-col gap-6">
+                <div class="astro-panel p-4 rounded-sm">
+                    <h3 class="font-hud text-xs text-cyan-500 uppercase tracking-widest mb-3 border-b border-cyan-900/50 pb-2">Status del Escáner</h3>
+                    <div class="space-y-3 font-data text-xs text-slate-400">
+                        <div class="flex justify-between"><span>ANALÍTICA:</span> <span class="text-emerald-400">NOMINAL</span></div>
+                        <div class="flex justify-between"><span>RUIDO ESPACIAL:</span> <span>0.0034%</span></div>
+                        <div class="flex justify-between"><span>ESPECTRO:</span> <span class="text-cyan-400">ÓPTIMO</span></div>
+                    </div>
+                </div>
+                <!-- Radar placeholder -->
+                <div class="astro-panel p-4 rounded-sm flex-grow flex items-center justify-center relative overflow-hidden h-[300px]">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1)_0%,transparent_70%)]"></div>
+                    <div class="w-full h-full border border-cyan-500/20 rounded-full animate-[spin_10s_linear_infinite] border-t-cyan-400/80 border-b-emerald-400/50"></div>
+                    <div class="w-3/4 h-3/4 absolute border border-cyan-500/10 rounded-full animate-[spin_15s_linear_infinite_reverse] border-l-cyan-500"></div>
+                    <div class="w-2 h-2 absolute bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,1)]"></div>
+                    <div class="absolute bottom-2 font-data text-[10px] text-cyan-600">BÚSQUEDA DE EXOPLANETAS ACTIVA</div>
+                </div>
+            </div>
+
+            <!-- Main Document Area -->
+            <div class="lg:col-span-9 space-y-6">
+                
+                <section class="astro-panel p-8 rounded-sm relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                    <h2 class="font-hud text-2xl font-bold text-white mb-4 uppercase tracking-widest">De dónde corresponden</h2>
+                    <p class="leading-relaxed text-lg text-slate-300 font-light">Las Redes Neuronales Artificiales pertenecen al campo del Aprendizaje Automático (Machine Learning), que a su vez es una subdisciplina de la Inteligencia Artificial. Específicamente, conforman la base del Aprendizaje Profundo (Deep Learning), diseñado para modelar abstracciones complejas en los datos a través de múltiples capas de procesamiento continuo.</p>
+                </section>
+
+                <section class="astro-panel p-8 rounded-sm relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500/70"></div>
+                    <h2 class="font-hud text-2xl font-bold text-white mb-4 uppercase tracking-widest">Descubrimiento</h2>
+                    <p class="leading-relaxed text-lg text-slate-300 font-light mb-4">Los fundamentos de las redes neuronales se establecieron en la década de 1940. En 1943, Warren McCulloch y Walter Pitts crearon el primer modelo matemático riguroso de una neurona biológica, demostrando de forma lógica que este modelo computacional abstracto podía resolver y realizar operaciones condicionales y lógicas básicas.</p>
+                    <p class="leading-relaxed text-lg text-slate-300 font-light">Posteriormente, en 1957, Frank Rosenblatt desarrolló el Perceptrón, reconociéndolo como el primer algoritmo capaz de aprender patrones a partir de datos empíricos de forma autónoma. Esto marcó el inicio formal de las redes neuronales como una herramienta computacional de aprendizaje iterativo.</p>
+                </section>
+
+                <section class="astro-panel p-8 rounded-sm relative border-l-4 border-l-rose-500/80">
+                    <h2 class="font-hud text-2xl font-bold text-rose-200 mb-4 uppercase tracking-widest drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]">Pérdida de interés en los 1990s</h2>
+                    <p class="leading-relaxed text-lg text-slate-300 font-light mb-4">Durante los años 90, la investigación experimentó un severo estancamiento. Este periodo de letargo estuvo determinado por factores y limitaciones sistémicas fundamentales:</p>
+                    <ul class="list-disc pl-8 leading-relaxed text-lg text-slate-300 font-light space-y-3 marker:text-rose-500">
+                        <li>Limitaciones computacionales extremas de la época para entrenar redes con múltiples capas (notoriamente asociadas al problema del desvanecimiento del gradiente).</li>
+                        <li>Escasez de conjuntos de datos masivos (bases de datos), los cuales son críticamente necesarios para entrenar modelos jerárquicos complejos.</li>
+                        <li>El surgimiento de algoritmos alternativos de Machine Learning, como las Máquinas de Vectores de Soporte (SVM), que ofrecían soluciones matemáticamente más tratables y eficientes computacionalmente.</li>
+                    </ul>
+                </section>
+
+                <section class="astro-panel p-8 rounded-sm relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                    <h2 class="font-hud text-2xl font-bold text-emerald-300 mb-4 uppercase tracking-widest drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">Resurgimiento</h2>
+                    <p class="leading-relaxed text-lg text-slate-300 font-light">Entrando en la década de 2010, el campo experimentó una revitalización sin precedentes. Este punto de inflexión dio paso a la era moderna del Deep Learning, logrando resultados sobresalientes e históricamente inigualables en campos de alta complejidad como la visión computacional y el procesamiento de lenguaje natural.</p>
+                </section>
+
+                <section class="astro-panel p-8 rounded-sm relative">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500/70"></div>
+                    <h2 class="font-hud text-2xl font-bold text-white mb-4 uppercase tracking-widest">¿Por qué resurgen?</h2>
+                    <ul class="list-disc pl-8 leading-relaxed text-lg text-slate-300 font-light space-y-3 marker:text-emerald-400">
+                        <li><strong>Poder Computacional (GPUs):</strong> Las Unidades de Procesamiento Gráfico demostraron ser una arquitectura de hardware excepcional para el procesamiento en paralelo masivo necesario en las multiplicaciones de matrices continuas de las redes neuronales.</li>
+                        <li><strong>Big Data:</strong> La madurez de la infraestructura de internet generó conjuntos de datos masivos (terabytes y petabytes de información), mitigando el problema del sobreajuste en redes profundas.</li>
+                        <li><strong>Avances Algorítmicos:</strong> El perfeccionamiento de nuevas funciones de activación, así como sofisticadas técnicas de regularización y métodos estocásticos de optimización, resolvieron la incapacidad técnica de propagar gradientes en arquitecturas de múltiples capas.</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Fake Sys Time for HUD
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('sys-time').textContent = now.toISOString().substr(11,8);
+        }, 1000);
+    </script>
+</body>
+</html>
